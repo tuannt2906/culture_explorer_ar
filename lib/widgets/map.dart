@@ -31,33 +31,34 @@ class _MyMapsState extends State<MyMaps> {
   @override
   Widget build(BuildContext context) {
     return FlutterMap(
-        options: MapOptions(
-          initialCenter: const LatLng(0, 0),
-          initialZoom: 15,
-          minZoom: 0,
+      options: MapOptions(
+        initialCenter: const LatLng(0, 0),
+        initialZoom: 15,
+        minZoom: 0,
+        maxZoom: 20,
+        // Stop aligning the location marker to the center of the map widget
+        // if user interacted with the map.
+        onPositionChanged: (MapPosition position, bool hasGesture) {
+          if (hasGesture && _alignPositionOnUpdate != AlignOnUpdate.never) {
+            setState(
+              () => _alignPositionOnUpdate = AlignOnUpdate.never,
+            );
+          }
+        },
+      ),
+      // ignore: sort_child_properties_last
+      children: [
+        TileLayer(
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          userAgentPackageName: 'com.example.app',
           maxZoom: 20,
-          // Stop aligning the location marker to the center of the map widget
-          // if user interacted with the map.
-          onPositionChanged: (MapPosition position, bool hasGesture) {
-            if (hasGesture && _alignPositionOnUpdate != AlignOnUpdate.never) {
-              setState(
-                () => _alignPositionOnUpdate = AlignOnUpdate.never,
-              );
-            }
-          },
         ),
-        // ignore: sort_child_properties_last
-        children: [
-          TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: 'com.example.app',
-            maxZoom: 20,
-          ),
-          CurrentLocationLayer(
-            alignPositionStream: _alignPositionStreamController.stream,
-            alignPositionOnUpdate: _alignPositionOnUpdate,
-          ),
-          Align(
+        CurrentLocationLayer(
+          alignPositionStream: _alignPositionStreamController.stream,
+          alignPositionOnUpdate: _alignPositionOnUpdate,
+        ),
+        SafeArea(
+          child: Align(
             alignment: Alignment.topRight,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
@@ -79,7 +80,8 @@ class _MyMapsState extends State<MyMaps> {
               ),
             ),
           ),
-        ],
-      );
+        )
+      ],
+    );
   }
 }

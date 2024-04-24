@@ -1,4 +1,4 @@
-import 'package:culture_explorer_ar/widgets/dragable_sheet.dart';
+import 'package:culture_explorer_ar/widgets/draggable_sheet.dart';
 import 'package:culture_explorer_ar/widgets/map.dart';
 import 'package:flutter/material.dart';
 
