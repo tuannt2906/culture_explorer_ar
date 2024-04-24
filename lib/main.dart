@@ -1,5 +1,5 @@
-import 'package:culture_explorer_ar/dragable_sheet.dart';
-import 'package:culture_explorer_ar/map.dart';
+import 'package:culture_explorer_ar/widgets/dragable_sheet.dart';
+import 'package:culture_explorer_ar/widgets/map.dart';
 import 'package:flutter/material.dart';
 
 void main() {
