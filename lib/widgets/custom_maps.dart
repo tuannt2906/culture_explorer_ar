@@ -36,7 +36,7 @@ class _CustomMapsState extends State<CustomMaps> {
   void getPlaces(LatLngBounds? bounds) {
     _timer?.cancel();
     _timer = Timer(
-        const Duration(milliseconds: 1000),
+        const Duration(milliseconds: 500),
         () => fetchPlaces(
                 '${bounds?.south},${bounds?.west},${bounds?.north}, ${bounds?.east}')
             .then((value) =>
