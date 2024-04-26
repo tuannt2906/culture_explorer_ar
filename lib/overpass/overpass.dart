@@ -1,7 +1,6 @@
 import 'package:culture_explorer_ar/overpass/place_model.dart';
+import 'package:culture_explorer_ar/widgets/custom_marker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -30,13 +29,8 @@ Future<List<Place>> fetchPlaces(String bbox) async {
   }
 }
 
-List<Marker> placesToMarkerList(List<Place> places) {
-  final markerList = places.map((place) {
-    if (place.tags.tourism == 'museum') {
-      return Marker(point: place.position, child: const Icon(Icons.museum));
-    } else if (place.tags.tourism == 'gallery') {
-      return Marker(point: place.position, child: const Icon(Icons.palette));
-    }
-  });
-  return List<Marker>.from(markerList);
+List<CustomMarker> placesToMarkerList(List<Place> places) {
+  final markerList = places.map(
+      (place) => CustomMarker(point: place.position, type: place.tags.tourism));
+  return List<CustomMarker>.from(markerList);
 }

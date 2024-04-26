@@ -1,22 +1,23 @@
 import 'dart:async';
 import 'package:culture_explorer_ar/overpass/overpass.dart';
+import 'package:culture_explorer_ar/widgets/custom_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 
-class MyMaps extends StatefulWidget {
-  const MyMaps({super.key});
+class CustomMaps extends StatefulWidget {
+  const CustomMaps({super.key});
 
   @override
-  State<MyMaps> createState() => _MyMapsState();
+  State<CustomMaps> createState() => _CustomMapsState();
 }
 
-class _MyMapsState extends State<MyMaps> {
+class _CustomMapsState extends State<CustomMaps> {
   late AlignOnUpdate _alignPositionOnUpdate;
   late final StreamController<double?> _alignPositionStreamController;
-  List<Marker> _markers = [];
+  List<CustomMarker> _markers = [];
   Timer? _timer;
 
   @override

@@ -1,14 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class MyDraggableSheet extends StatefulWidget {
-  const MyDraggableSheet({super.key});
+class CustomSheet extends StatefulWidget {
+  const CustomSheet({super.key});
 
   @override
-  State<MyDraggableSheet> createState() => _MyDraggableSheetState();
+  State<CustomSheet> createState() => _CustomSheetState();
 }
 
-class _MyDraggableSheetState extends State<MyDraggableSheet> {
+class _CustomSheetState extends State<CustomSheet> {
   final _controller = DraggableScrollableController();
   final _initialChildSize = 0.25;
   final _maxChildSize = 1.0;

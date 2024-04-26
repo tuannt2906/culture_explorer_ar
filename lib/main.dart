@@ -1,5 +1,5 @@
-import 'package:culture_explorer_ar/widgets/draggable_sheet.dart';
-import 'package:culture_explorer_ar/widgets/map.dart';
+import 'package:culture_explorer_ar/widgets/custom_sheet.dart';
+import 'package:culture_explorer_ar/widgets/custom_maps.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -36,8 +36,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Stack(children: <Widget>[
-        MyMaps(),
-        MyDraggableSheet(),
+        CustomMaps(),
+        CustomSheet(),
       ]),
     );
   }
