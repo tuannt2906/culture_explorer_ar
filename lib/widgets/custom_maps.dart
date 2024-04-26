@@ -100,6 +100,7 @@ class _CustomMapsState extends State<CustomMaps> {
             padding: const EdgeInsets.all(50),
             maxZoom: 15,
             markers: _markers,
+            rotate: true,
             builder: (context, markers) {
               return Container(
                 decoration: BoxDecoration(
