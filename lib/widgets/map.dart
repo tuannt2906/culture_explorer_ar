@@ -16,6 +16,7 @@ class _MyMapsState extends State<MyMaps> {
   late AlignOnUpdate _alignPositionOnUpdate;
   late final StreamController<double?> _alignPositionStreamController;
   List<CircleMarker> circles = [];
+  Timer? timer;
 
   @override
   void initState() {
@@ -51,7 +52,10 @@ class _MyMapsState extends State<MyMaps> {
         // Stop aligning the location marker to the center of the map widget
         // if user interacted with the map.
         onPositionChanged: (MapPosition position, bool hasGesture) {
-          getPlaces(position.bounds);
+          timer?.cancel();
+          timer = Timer(const Duration(milliseconds: 1000), () {
+            getPlaces(position.bounds);
+          });
 
           if (hasGesture && _alignPositionOnUpdate != AlignOnUpdate.never) {
             setState(() {
