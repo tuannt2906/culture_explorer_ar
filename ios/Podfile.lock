@@ -23,6 +23,6 @@ SPEC CHECKSUMS:
   flutter_compass: cbbd285cea1584c7ac9c4e0c3e1f17cbea55e855
   geolocator_apple: 6cbaf322953988e009e5ecb481f07efece75c450
 
-PODFILE CHECKSUM: e7a8e18d1c76825d606ccce0793d1bb0d5dded90
+PODFILE CHECKSUM: e5493faad3fc3f6c4525cb64f2dced6c8b8742ad
 
 COCOAPODS: 1.15.2

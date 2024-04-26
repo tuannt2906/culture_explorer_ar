@@ -32,17 +32,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
-
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Stack(
-        children: <Widget> [
-           MyMaps(),
-           MyDraggableSheet(),
-        ]
-      ),
+      body: Stack(children: <Widget>[
+        MyMaps(),
+        MyDraggableSheet(),
+      ]),
     );
   }
 }

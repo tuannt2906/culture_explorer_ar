@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:culture_explorer_ar/overpass/overpass.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
@@ -14,6 +15,7 @@ class MyMaps extends StatefulWidget {
 class _MyMapsState extends State<MyMaps> {
   late AlignOnUpdate _alignPositionOnUpdate;
   late final StreamController<double?> _alignPositionStreamController;
+  List<CircleMarker> circles = [];
 
   @override
   void initState() {
@@ -28,6 +30,16 @@ class _MyMapsState extends State<MyMaps> {
     super.dispose();
   }
 
+  void getPlaces(LatLngBounds? bounds) {
+    fetchPlaces(
+            '${bounds?.south},${bounds?.west},${bounds?.north}, ${bounds?.east}')
+        .then((value) {
+      setState(() {
+        circles = placesToMarkerList(value);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FlutterMap(
@@ -35,14 +47,16 @@ class _MyMapsState extends State<MyMaps> {
         initialCenter: const LatLng(0, 0),
         initialZoom: 15,
         minZoom: 0,
-        maxZoom: 20,
+        maxZoom: 18,
         // Stop aligning the location marker to the center of the map widget
         // if user interacted with the map.
         onPositionChanged: (MapPosition position, bool hasGesture) {
+          getPlaces(position.bounds);
+
           if (hasGesture && _alignPositionOnUpdate != AlignOnUpdate.never) {
-            setState(
-              () => _alignPositionOnUpdate = AlignOnUpdate.never,
-            );
+            setState(() {
+              _alignPositionOnUpdate = AlignOnUpdate.never;
+            });
           }
         },
       ),
@@ -51,7 +65,7 @@ class _MyMapsState extends State<MyMaps> {
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.example.app',
-          maxZoom: 20,
+          maxZoom: 15,
         ),
         CurrentLocationLayer(
           alignPositionStream: _alignPositionStreamController.stream,
@@ -66,12 +80,10 @@ class _MyMapsState extends State<MyMaps> {
                 onPressed: () {
                   // Align the location marker to the center of the map widget
                   // on location update until user interact with the map.
-                  setState(
-                    () => _alignPositionOnUpdate = AlignOnUpdate.always,
-                  );
+                  setState(() => _alignPositionOnUpdate = AlignOnUpdate.always);
                   // Align the location marker to the center of the map widget
                   // and zoom the map to level 18.
-                  _alignPositionStreamController.add(18);
+                  _alignPositionStreamController.add(15);
                 },
                 child: const Icon(
                   Icons.my_location,
@@ -80,7 +92,8 @@ class _MyMapsState extends State<MyMaps> {
               ),
             ),
           ),
-        )
+        ),
+        CircleLayer(circles: circles),
       ],
     );
   }
