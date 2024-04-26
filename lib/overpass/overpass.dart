@@ -1,7 +1,15 @@
 import 'package:culture_explorer_ar/overpass/place_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+List<Place> parsePlaces(http.Response response) {
+  final decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+  final places = decodedResponse['elements'] as Iterable<dynamic>? ?? [];
+
+  return places.map<Place>((json) => Place.fromJson(json)).toList();
+}
 
 Future<List<Place>> fetchPlaces(String location) async {
   try {
@@ -14,17 +22,8 @@ Future<List<Place>> fetchPlaces(String location) async {
           'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         },
         body: query);
-    final decodedResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
-    final osmPlaces = decodedResponse['elements'] as Iterable<dynamic>? ?? [];
-    List<Place> places = [];
-    for (final element in osmPlaces) {
-      try {
-        places.add(Place.fromJson(element));
-      } catch (error) {
-        return [];
-      }
-    }
-    return places;
+        
+    return compute(parsePlaces, response);
   } catch (error) {
     return [];
   }
