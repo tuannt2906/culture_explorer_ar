@@ -3,6 +3,7 @@ import 'package:culture_explorer_ar/overpass/overpass.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 
 class MyMaps extends StatefulWidget {
@@ -15,7 +16,7 @@ class MyMaps extends StatefulWidget {
 class _MyMapsState extends State<MyMaps> {
   late AlignOnUpdate _alignPositionOnUpdate;
   late final StreamController<double?> _alignPositionStreamController;
-  List<CircleMarker> _circles = [];
+  List<Marker> _markers = [];
   Timer? _timer;
 
   @override
@@ -36,7 +37,7 @@ class _MyMapsState extends State<MyMaps> {
             '${bounds?.south},${bounds?.west},${bounds?.north}, ${bounds?.east}')
         .then((value) {
       setState(() {
-        _circles = placesToMarkerList(value);
+        _markers = placesToMarkerList(value);
       });
     });
   }
@@ -47,15 +48,14 @@ class _MyMapsState extends State<MyMaps> {
       options: MapOptions(
         initialCenter: const LatLng(0, 0),
         initialZoom: 15,
-        minZoom: 0,
+        minZoom: 5,
         maxZoom: 18,
         // Stop aligning the location marker to the center of the map widget
         // if user interacted with the map.
         onPositionChanged: (MapPosition position, bool hasGesture) {
           _timer?.cancel();
-          _timer = Timer(const Duration(milliseconds: 1000), () {
-            getPlaces(position.bounds);
-          });
+          _timer = Timer(const Duration(milliseconds: 1000),
+              () => getPlaces(position.bounds));
 
           if (hasGesture && _alignPositionOnUpdate != AlignOnUpdate.never) {
             setState(() {
@@ -69,7 +69,6 @@ class _MyMapsState extends State<MyMaps> {
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.example.app',
-          maxZoom: 15,
         ),
         CurrentLocationLayer(
           alignPositionStream: _alignPositionStreamController.stream,
@@ -97,7 +96,29 @@ class _MyMapsState extends State<MyMaps> {
             ),
           ),
         ),
-        CircleLayer(circles: _circles),
+        MarkerClusterLayerWidget(
+          options: MarkerClusterLayerOptions(
+            maxClusterRadius: 45,
+            size: const Size(40, 40),
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(50),
+            maxZoom: 15,
+            markers: _markers,
+            builder: (context, markers) {
+              return Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.blue),
+                child: Center(
+                  child: Text(
+                    markers.length.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
       ],
     );
   }
