@@ -34,13 +34,13 @@ class _CustomMapsState extends State<CustomMaps> {
   }
 
   void getPlaces(LatLngBounds? bounds) {
-    fetchPlaces(
-            '${bounds?.south},${bounds?.west},${bounds?.north}, ${bounds?.east}')
-        .then((value) {
-      setState(() {
-        _markers = placesToMarkerList(value);
-      });
-    });
+    _timer?.cancel();
+    _timer = Timer(
+        const Duration(milliseconds: 1000),
+        () => fetchPlaces(
+                '${bounds?.south},${bounds?.west},${bounds?.north}, ${bounds?.east}')
+            .then((value) =>
+                setState(() => _markers = placesToMarkerList(value))));
   }
 
   @override
@@ -54,14 +54,9 @@ class _CustomMapsState extends State<CustomMaps> {
         // Stop aligning the location marker to the center of the map widget
         // if user interacted with the map.
         onPositionChanged: (MapPosition position, bool hasGesture) {
-          _timer?.cancel();
-          _timer = Timer(const Duration(milliseconds: 1000),
-              () => getPlaces(position.bounds));
-
+          getPlaces(position.bounds);
           if (hasGesture && _alignPositionOnUpdate != AlignOnUpdate.never) {
-            setState(() {
-              _alignPositionOnUpdate = AlignOnUpdate.never;
-            });
+            setState(() => _alignPositionOnUpdate = AlignOnUpdate.never);
           }
         },
       ),
