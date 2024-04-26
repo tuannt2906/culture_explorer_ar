@@ -9,21 +9,21 @@ class MyDraggableSheet extends StatefulWidget {
 }
 
 class _MyDraggableSheetState extends State<MyDraggableSheet> {
-  final controller = DraggableScrollableController();
-  final initialChildSize = 0.25;
-  final maxChildSize = 1.0;
-  final minChildSize = 0.1;
-  final snapSizes = [0.25];
+  final _controller = DraggableScrollableController();
+  final _initialChildSize = 0.25;
+  final _maxChildSize = 1.0;
+  final _minChildSize = 0.1;
+  final _snapSizes = [0.25];
 
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      initialChildSize: initialChildSize,
-      maxChildSize: maxChildSize,
-      minChildSize: minChildSize,
+      initialChildSize: _initialChildSize,
+      maxChildSize: _maxChildSize,
+      minChildSize: _minChildSize,
       snap: true,
-      snapSizes: snapSizes,
-      controller: controller,
+      snapSizes: _snapSizes,
+      controller: _controller,
       builder: (BuildContext context, scrollController) {
         return Container(
           clipBehavior: Clip.hardEdge,

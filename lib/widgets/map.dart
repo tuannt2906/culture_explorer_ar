@@ -15,8 +15,8 @@ class MyMaps extends StatefulWidget {
 class _MyMapsState extends State<MyMaps> {
   late AlignOnUpdate _alignPositionOnUpdate;
   late final StreamController<double?> _alignPositionStreamController;
-  List<CircleMarker> circles = [];
-  Timer? timer;
+  List<CircleMarker> _circles = [];
+  Timer? _timer;
 
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _MyMapsState extends State<MyMaps> {
             '${bounds?.south},${bounds?.west},${bounds?.north}, ${bounds?.east}')
         .then((value) {
       setState(() {
-        circles = placesToMarkerList(value);
+        _circles = placesToMarkerList(value);
       });
     });
   }
@@ -52,8 +52,8 @@ class _MyMapsState extends State<MyMaps> {
         // Stop aligning the location marker to the center of the map widget
         // if user interacted with the map.
         onPositionChanged: (MapPosition position, bool hasGesture) {
-          timer?.cancel();
-          timer = Timer(const Duration(milliseconds: 1000), () {
+          _timer?.cancel();
+          _timer = Timer(const Duration(milliseconds: 1000), () {
             getPlaces(position.bounds);
           });
 
@@ -97,7 +97,7 @@ class _MyMapsState extends State<MyMaps> {
             ),
           ),
         ),
-        CircleLayer(circles: circles),
+        CircleLayer(circles: _circles),
       ],
     );
   }
