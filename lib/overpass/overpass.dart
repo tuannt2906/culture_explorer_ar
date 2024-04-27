@@ -30,7 +30,10 @@ Future<List<Place>> fetchPlaces(String bbox) async {
 }
 
 List<CustomMarker> placesToMarkerList(List<Place> places) {
-  final markerList = places.map(
-      (place) => CustomMarker(point: place.position, type: place.tags.tourism));
+  final markerList = places.map((place) => CustomMarker(
+      point: place.position,
+      name: place.tags.name,
+      nameEn: place.tags.nameEn,
+      type: place.tags.tourism));
   return List<CustomMarker>.from(markerList);
 }

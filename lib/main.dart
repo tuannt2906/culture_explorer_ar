@@ -1,6 +1,7 @@
 import 'package:culture_explorer_ar/widgets/custom_sheet.dart';
 import 'package:culture_explorer_ar/widgets/custom_maps.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,11 +35,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Stack(children: <Widget>[
-        CustomMaps(),
-        CustomSheet(),
-      ]),
+    return Scaffold(
+      body: ChangeNotifierProvider(
+        create: (context) => SheetNotifier(),
+        child: const Stack(children: <Widget>[
+          CustomMaps(),
+          CustomSheet(),
+        ]),
+      ),
     );
   }
 }
