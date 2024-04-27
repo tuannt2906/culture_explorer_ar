@@ -1,3 +1,4 @@
+import 'package:culture_explorer_ar/widgets/custom_marker.dart';
 import 'package:culture_explorer_ar/widgets/custom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,18 +27,27 @@ class _CustomIconButtonState extends State<CustomIconButton> {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton.filled(
-      isSelected: _isSelected,
-      onPressed: () {
-        final sheet = context.read<SheetNotifier>();
-        sheet.update(widget._name ?? widget._nameEn ?? "Nearby Places");
-        setState(() {
-          _isSelected = !_isSelected;
-        });
-      },
-      icon: Icon(widget._icon),
-      selectedIcon: Icon(widget._selectedIcon),
-      tooltip: '${widget.type[0].toUpperCase()}${widget.type.substring(1)}',
+    return Consumer<MarkerNotifier>(
+      builder: (context, marker, child) => IconButton.filled(
+        isSelected: _isSelected,
+        onPressed: () {
+          final sheet = context.read<SheetNotifier>();
+
+          setState(() {
+            if (!marker.isSelected) {
+              _isSelected = true;
+              sheet.update(widget._name ?? widget._nameEn ?? "No name provided");
+              marker.updateSelection();
+            } else if (_isSelected) {
+              _isSelected = false;
+              marker.updateSelection();
+            }
+          });
+        },
+        icon: Icon(widget._icon),
+        selectedIcon: Icon(widget._selectedIcon),
+        tooltip: '${widget.type[0].toUpperCase()}${widget.type.substring(1)}',
+      ),
     );
   }
 }

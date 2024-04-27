@@ -2,6 +2,15 @@ import 'package:culture_explorer_ar/widgets/custom_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 
+class MarkerNotifier with ChangeNotifier {
+  bool _isSelected = false;
+  bool get isSelected => _isSelected;
+
+  void updateSelection() {
+    _isSelected = !_isSelected;
+  }
+}
+
 @immutable
 class CustomMarker extends Marker {
   final String? name;

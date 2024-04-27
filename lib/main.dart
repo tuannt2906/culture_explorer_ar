@@ -1,10 +1,14 @@
+import 'package:culture_explorer_ar/widgets/custom_marker.dart';
 import 'package:culture_explorer_ar/widgets/custom_sheet.dart';
 import 'package:culture_explorer_ar/widgets/custom_maps.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: ((context) => SheetNotifier())),
+    ChangeNotifierProvider(create: (context) => MarkerNotifier()),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -35,14 +39,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ChangeNotifierProvider(
-        create: (context) => SheetNotifier(),
-        child: const Stack(children: <Widget>[
-          CustomMaps(),
-          CustomSheet(),
-        ]),
-      ),
+    return const Scaffold(
+      body: Stack(children: <Widget>[
+        CustomMaps(),
+        CustomSheet(),
+      ]),
     );
   }
 }
