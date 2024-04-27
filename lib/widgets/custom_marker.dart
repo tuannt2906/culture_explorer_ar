@@ -1,3 +1,4 @@
+import 'package:culture_explorer_ar/widgets/custom_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 
@@ -9,16 +10,5 @@ class CustomMarker extends Marker {
 
   CustomMarker(
       {this.name, this.nameEn, required super.point, required this.type})
-      : super(
-          rotate: true,
-          child: Material(
-            type: MaterialType.transparency,
-            child: InkWell(
-              onTap: () => print("tapped"),
-              child: type == "museum"
-                  ? const Icon(Icons.museum)
-                  : const Icon(Icons.palette),
-            ),
-          ),
-        );
+      : super(rotate: true, child: CustomIconButton(type: type));
 }
