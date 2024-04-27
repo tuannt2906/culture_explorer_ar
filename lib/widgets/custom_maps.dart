@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:culture_explorer_ar/overpass/overpass.dart';
 import 'package:culture_explorer_ar/widgets/custom_marker.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
@@ -19,6 +21,7 @@ class _CustomMapsState extends State<CustomMaps> {
   late final StreamController<double?> _alignPositionStreamController;
   List<CustomMarker> _markers = [];
   Timer? _timer;
+  final _cacheStore = MemCacheStore();
 
   @override
   void initState() {
@@ -65,6 +68,10 @@ class _CustomMapsState extends State<CustomMaps> {
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: 'com.example.app',
+          tileProvider: CachedTileProvider(
+            // use the store for your CachedTileProvider instance
+            store: _cacheStore,
+          ),
         ),
         CurrentLocationLayer(
           alignPositionStream: _alignPositionStreamController.stream,
