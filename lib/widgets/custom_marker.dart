@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 class MarkerNotifier with ChangeNotifier {
-  List<CustomMarker> _markers = [];
-  List<CustomMarker> get markers => List.unmodifiable(_markers);
+  List<CustomMarker> _markerList = [];
+  List<CustomMarker> get markerList => List.unmodifiable(_markerList);
 
   bool _isSelected = false;
   bool get isSelected => _isSelected;
 
   void createMarkers(List<Place> places) {
-    _markers = places
+    _markerList = places
         .map((place) => CustomMarker(
             point: place.position,
             name: place.tags.name,

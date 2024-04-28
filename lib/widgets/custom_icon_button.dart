@@ -39,7 +39,7 @@ class _CustomIconButtonState extends State<CustomIconButton> {
             if (!marker.isSelected) {
               setState(() => _isSelected = true);
               sheet
-                  .update(widget._name ?? widget._nameEn ?? "No name provided");
+                  .update(widget._name ?? widget._nameEn);
               marker.changeSelection();
             } else if (_isSelected) {
               setState(() => _isSelected = false);

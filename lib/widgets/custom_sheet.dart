@@ -1,4 +1,5 @@
 import 'package:culture_explorer_ar/widgets/custom_grid.dart';
+import 'package:culture_explorer_ar/widgets/custom_marker.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,8 +8,8 @@ class SheetNotifier with ChangeNotifier {
   String _title = "Nearby Places";
   String get title => _title;
 
-  void update(String title) {
-    _title = title;
+  void update(String? title) {
+    _title = title ?? 'Not provided';
     notifyListeners();
   }
 }
@@ -49,8 +50,6 @@ class SheetBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> dataList = List.generate(20, (index) => 'Item $index');
-
     return Container(
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
@@ -60,8 +59,8 @@ class SheetBody extends StatelessWidget {
           topRight: Radius.circular(25),
         ),
       ),
-      child: Consumer<SheetNotifier>(
-        builder: (context, sheet, child) => CustomScrollView(
+      child: Consumer2<SheetNotifier, MarkerNotifier>(
+        builder: (context, sheet, marker, child) => CustomScrollView(
           controller: scrollController,
           scrollBehavior: const ScrollBehavior().copyWith(dragDevices: {
             PointerDeviceKind.touch,
@@ -89,12 +88,15 @@ class SheetBody extends StatelessWidget {
             ),
             SliverGrid.builder(
                 gridDelegate: CustomGridDelegate(dimension: 240),
-                itemCount: dataList.length,
+                itemCount: marker.markerList.length,
                 itemBuilder: (BuildContext context, int index) {
                   // final math.Random random = math.Random(index);
                   return GridTile(
                     header: GridTileBar(
-                      title: Text(dataList[index],
+                      title: Text(
+                          marker.markerList[index].name ??
+                              marker.markerList[index].nameEn ??
+                              "Not provided",
                           style: const TextStyle(color: Colors.black)),
                     ),
                     child: Container(

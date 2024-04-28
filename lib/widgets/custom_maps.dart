@@ -115,7 +115,7 @@ class _CustomMapsState extends State<CustomMaps> {
               alignment: Alignment.center,
               padding: const EdgeInsets.all(50),
               maxZoom: 15,
-              markers: marker.markers,
+              markers: marker.markerList,
               rotate: true,
               builder: (context, markers) {
                 return Container(
