@@ -1,3 +1,4 @@
+import 'package:culture_explorer_ar/widgets/custom_grid.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -48,6 +49,8 @@ class SheetBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> dataList = List.generate(20, (index) => 'Item $index');
+
     return Container(
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
@@ -84,10 +87,32 @@ class SheetBody extends StatelessWidget {
               pinned: true,
               centerTitle: false,
             ),
-            SliverList.list(children: const [
-              ListTile(title: Text('Jane Doe')),
-              ListTile(title: Text('Jack Reacher')),
-            ])
+            SliverGrid.builder(
+                gridDelegate: CustomGridDelegate(dimension: 240),
+                itemCount: dataList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  // final math.Random random = math.Random(index);
+                  return GridTile(
+                    header: GridTileBar(
+                      title: Text(dataList[index],
+                          style: const TextStyle(color: Colors.black)),
+                    ),
+                    child: Container(
+                      margin: const EdgeInsets.all(12.0),
+                      decoration: ShapeDecoration(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        gradient: const RadialGradient(
+                          colors: <Color>[Color(0x0F88EEFF), Color(0x2F0099BB)],
+                        ),
+                      ),
+                      child: FlutterLogo(
+                        style: FlutterLogoStyle.values[1],
+                      ),
+                    ),
+                  );
+                })
           ],
         ),
       ),

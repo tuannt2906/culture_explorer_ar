@@ -36,7 +36,6 @@ class _CustomIconButtonState extends State<CustomIconButton> {
         onPressed: () {
           final sheet = context.read<SheetNotifier>();
 
-   
             if (!marker.isSelected) {
               setState(() => _isSelected = true);
               sheet
