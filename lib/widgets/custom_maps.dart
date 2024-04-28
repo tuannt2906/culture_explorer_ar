@@ -62,7 +62,7 @@ class _CustomMapsState extends State<CustomMaps> {
           final marker = context.read<MarkerNotifier>(); 
           final sheet = context.read<SheetNotifier>();
 
-          marker.updateSelection();
+          marker.changeSelection();
           sheet.update("Nearby Places");
 
           getPlaces(position.bounds);

@@ -7,14 +7,17 @@ class CustomIconButton extends StatefulWidget {
   final String? _name;
   final String? _nameEn;
   final String type;
-  final IconData _icon;
-  final IconData _selectedIcon;
+  final Icon _icon;
+  final Icon _selectedIcon;
 
   const CustomIconButton(
       {super.key, required this.type, String? name, String? nameEn})
-      : _icon =
-            type == 'museum' ? Icons.museum_outlined : Icons.palette_outlined,
-        _selectedIcon = type == 'museum' ? Icons.museum : Icons.palette,
+      : _icon = type == 'museum'
+            ? const Icon(Icons.museum_outlined)
+            : const Icon(Icons.palette_outlined),
+        _selectedIcon = type == 'museum'
+            ? const Icon(Icons.museum)
+            : const Icon(Icons.palette),
         _name = name,
         _nameEn = nameEn;
 
@@ -33,19 +36,21 @@ class _CustomIconButtonState extends State<CustomIconButton> {
         onPressed: () {
           final sheet = context.read<SheetNotifier>();
 
-          setState(() {
+   
             if (!marker.isSelected) {
-              _isSelected = true;
-              sheet.update(widget._name ?? widget._nameEn ?? "No name provided");
-              marker.updateSelection();
+              setState(() => _isSelected = true);
+              sheet
+                  .update(widget._name ?? widget._nameEn ?? "No name provided");
+              marker.changeSelection();
             } else if (_isSelected) {
-              _isSelected = false;
-              marker.updateSelection();
+              setState(() => _isSelected = false);
+              sheet.update("Nearby Places");
+              marker.changeSelection();
             }
-          });
+      
         },
-        icon: Icon(widget._icon),
-        selectedIcon: Icon(widget._selectedIcon),
+        icon: widget._icon,
+        selectedIcon: widget._selectedIcon,
         tooltip: '${widget.type[0].toUpperCase()}${widget.type.substring(1)}',
       ),
     );
