@@ -21,7 +21,7 @@ class CustomMaps extends StatefulWidget {
 class _CustomMapsState extends State<CustomMaps> {
   late AlignOnUpdate _alignPositionOnUpdate;
   late final StreamController<double?> _alignPositionStreamController;
-  List<CustomMarker> _markers = [];
+
   Timer? _timer;
   final _cacheStore = MemCacheStore();
 
@@ -38,100 +38,102 @@ class _CustomMapsState extends State<CustomMaps> {
     super.dispose();
   }
 
-  void getPlaces(LatLngBounds? bounds) {
+  void getPlaces(LatLngBounds? bounds, MarkerNotifier marker) {
     _timer?.cancel();
     _timer = Timer(
         const Duration(milliseconds: 500),
         () => fetchPlaces(
-                '${bounds?.south},${bounds?.west},${bounds?.north}, ${bounds?.east}')
-            .then((value) =>
-                setState(() => _markers = placesToMarkerList(value))));
+                    '${bounds?.south},${bounds?.west},${bounds?.north}, ${bounds?.east}')
+                .then((places) {
+              marker.createMarkers(places);
+              marker.resetSelection();
+            }));
   }
 
   @override
   Widget build(BuildContext context) {
-    return FlutterMap(
-      options: MapOptions(
-        initialCenter: const LatLng(0, 0),
-        initialZoom: 15,
-        minZoom: 5,
-        maxZoom: 18,
-        // Stop aligning the location marker to the center of the map widget
-        // if user interacted with the map.
-        onPositionChanged: (MapPosition position, bool hasGesture) {
-          final marker = context.read<MarkerNotifier>(); 
-          final sheet = context.read<SheetNotifier>();
+    return Consumer<MarkerNotifier>(
+      builder: (context, marker, child) => FlutterMap(
+        options: MapOptions(
+          initialCenter: const LatLng(0, 0),
+          initialZoom: 15,
+          minZoom: 5,
+          maxZoom: 18,
+          // Stop aligning the location marker to the center of the map widget
+          // if user interacted with the map.
+          onPositionChanged: (MapPosition position, bool hasGesture) {
+            final sheet = context.read<SheetNotifier>();
+            sheet.update("Nearby Places");
 
-          marker.resetSelection();
-          sheet.update("Nearby Places");
-
-          getPlaces(position.bounds);
-          if (hasGesture && _alignPositionOnUpdate != AlignOnUpdate.never) {
-            setState(() => _alignPositionOnUpdate = AlignOnUpdate.never);
-          }
-        },
-      ),
-      // ignore: sort_child_properties_last
-      children: [
-        TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'com.example.app',
-          tileProvider: CachedTileProvider(
-            // use the store for your CachedTileProvider instance
-            store: _cacheStore,
+            getPlaces(position.bounds, marker);
+            if (hasGesture && _alignPositionOnUpdate != AlignOnUpdate.never) {
+              setState(() => _alignPositionOnUpdate = AlignOnUpdate.never);
+            }
+          },
+        ),
+        // ignore: sort_child_properties_last
+        children: [
+          TileLayer(
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            userAgentPackageName: 'com.example.app',
+            tileProvider: CachedTileProvider(
+              // use the store for your CachedTileProvider instance
+              store: _cacheStore,
+            ),
           ),
-        ),
-        CurrentLocationLayer(
-          alignPositionStream: _alignPositionStreamController.stream,
-          alignPositionOnUpdate: _alignPositionOnUpdate,
-        ),
-        SafeArea(
-          child: Align(
-            alignment: Alignment.topRight,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: FloatingActionButton(
-                onPressed: () {
-                  // Align the location marker to the center of the map widget
-                  // on location update until user interact with the map.
-                  setState(() => _alignPositionOnUpdate = AlignOnUpdate.always);
-                  // Align the location marker to the center of the map widget
-                  // and zoom the map to level 18.
-                  _alignPositionStreamController.add(15);
-                },
-                child: const Icon(
-                  Icons.my_location,
-                  color: Colors.white,
+          CurrentLocationLayer(
+            alignPositionStream: _alignPositionStreamController.stream,
+            alignPositionOnUpdate: _alignPositionOnUpdate,
+          ),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    // Align the location marker to the center of the map widget
+                    // on location update until user interact with the map.
+                    setState(
+                        () => _alignPositionOnUpdate = AlignOnUpdate.always);
+                    // Align the location marker to the center of the map widget
+                    // and zoom the map to level 18.
+                    _alignPositionStreamController.add(15);
+                  },
+                  child: const Icon(
+                    Icons.my_location,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        MarkerClusterLayerWidget(
-          options: MarkerClusterLayerOptions(
-            maxClusterRadius: 45,
-            size: const Size(40, 40),
-            alignment: Alignment.center,
-            padding: const EdgeInsets.all(50),
-            maxZoom: 15,
-            markers: _markers,
-            rotate: true,
-            builder: (context, markers) {
-              return Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Colors.blue),
-                child: Center(
-                  child: Text(
-                    markers.length.toString(),
-                    style: const TextStyle(color: Colors.white),
+          MarkerClusterLayerWidget(
+            options: MarkerClusterLayerOptions(
+              maxClusterRadius: 45,
+              size: const Size(40, 40),
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(50),
+              maxZoom: 15,
+              markers: marker.markers,
+              rotate: true,
+              builder: (context, markers) {
+                return Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.blue),
+                  child: Center(
+                    child: Text(
+                      markers.length.toString(),
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:culture_explorer_ar/overpass/place_model.dart';
-import 'package:culture_explorer_ar/widgets/custom_marker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -27,13 +26,4 @@ Future<List<Place>> fetchPlaces(String bbox) async {
   } catch (error) {
     return [];
   }
-}
-
-List<CustomMarker> placesToMarkerList(List<Place> places) {
-  final markerList = places.map((place) => CustomMarker(
-      point: place.position,
-      name: place.tags.name,
-      nameEn: place.tags.nameEn,
-      type: place.tags.tourism));
-  return List<CustomMarker>.from(markerList);
 }

@@ -1,10 +1,25 @@
+import 'package:culture_explorer_ar/overpass/place_model.dart';
 import 'package:culture_explorer_ar/widgets/custom_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 class MarkerNotifier with ChangeNotifier {
+  List<CustomMarker> _markers = [];
+  List<CustomMarker> get markers => List.unmodifiable(_markers);
+
   bool _isSelected = false;
   bool get isSelected => _isSelected;
+
+  void createMarkers(List<Place> places) {
+    _markers = places
+        .map((place) => CustomMarker(
+            point: place.position,
+            name: place.tags.name,
+            nameEn: place.tags.nameEn,
+            type: place.tags.tourism))
+        .toList();
+    notifyListeners();
+  }
 
   void resetSelection() {
     _isSelected = false;
