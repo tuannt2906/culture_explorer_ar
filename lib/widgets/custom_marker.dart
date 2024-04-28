@@ -6,6 +6,11 @@ class MarkerNotifier with ChangeNotifier {
   bool _isSelected = false;
   bool get isSelected => _isSelected;
 
+  void resetSelection() {
+    _isSelected = false;
+    notifyListeners();
+  }
+
   void changeSelection() {
     _isSelected = !_isSelected;
     notifyListeners();
