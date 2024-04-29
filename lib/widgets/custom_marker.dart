@@ -10,6 +10,19 @@ class MarkerNotifier with ChangeNotifier {
   bool _isSelected = false;
   bool get isSelected => _isSelected;
 
+  CustomIconButtonState? _selectedMarker;
+  CustomIconButtonState? get selectedMarker => _selectedMarker;
+
+  void resetSelected(CustomIconButtonState state) {
+    state.setSelected();
+    notifyListeners();
+  }
+
+  void setSelectedMarker(CustomIconButtonState marker) {
+    _selectedMarker = marker;
+    notifyListeners();
+  }
+
   void createMarkers(List<Place> places) {
     _markerList = places
         .map((place) => CustomMarker(
@@ -26,7 +39,7 @@ class MarkerNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  void changeSelection() {
+  void setSelection() {
     _isSelected = !_isSelected;
     notifyListeners();
   }

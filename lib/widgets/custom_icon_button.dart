@@ -22,11 +22,15 @@ class CustomIconButton extends StatefulWidget {
         _nameEn = nameEn;
 
   @override
-  State<CustomIconButton> createState() => _CustomIconButtonState();
+  State<CustomIconButton> createState() => CustomIconButtonState();
 }
 
-class _CustomIconButtonState extends State<CustomIconButton> {
+class CustomIconButtonState extends State<CustomIconButton> {
   bool _isSelected = false;
+
+  void setSelected() {
+    setState(() => _isSelected = !_isSelected);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,17 +40,21 @@ class _CustomIconButtonState extends State<CustomIconButton> {
         onPressed: () {
           final sheet = context.read<SheetNotifier>();
 
-            if (!marker.isSelected) {
-              setState(() => _isSelected = true);
-              sheet
-                  .update(widget._name ?? widget._nameEn);
-              marker.changeSelection();
-            } else if (_isSelected) {
-              setState(() => _isSelected = false);
-              sheet.update("Nearby Places");
-              marker.changeSelection();
-            }
-      
+          if (!marker.isSelected) {
+            setSelected();
+            sheet.update(widget._name ?? widget._nameEn);
+            marker.setSelection();
+            marker.setSelectedMarker(this);
+          } else if (_isSelected) {
+            setSelected();
+            sheet.update("Nearby Places");
+            marker.setSelection();
+          } else {
+            setSelected();
+            sheet.update(widget._name ?? widget._nameEn);
+            marker.resetSelected(marker.selectedMarker!);
+            marker.setSelectedMarker(this);
+          }
         },
         icon: widget._icon,
         selectedIcon: widget._selectedIcon,

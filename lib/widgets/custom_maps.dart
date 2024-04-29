@@ -52,8 +52,8 @@ class _CustomMapsState extends State<CustomMaps> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<MarkerNotifier>(
-      builder: (context, marker, child) => FlutterMap(
+    return Consumer2<SheetNotifier, MarkerNotifier>(
+      builder: (context, sheet, marker, child) => FlutterMap(
         options: MapOptions(
           initialCenter: const LatLng(0, 0),
           initialZoom: 15,
@@ -62,7 +62,6 @@ class _CustomMapsState extends State<CustomMaps> {
           // Stop aligning the location marker to the center of the map widget
           // if user interacted with the map.
           onPositionChanged: (MapPosition position, bool hasGesture) {
-            final sheet = context.read<SheetNotifier>();
             sheet.update("Nearby Places");
 
             getPlaces(position.bounds, marker);
