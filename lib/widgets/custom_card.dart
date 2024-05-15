@@ -1,3 +1,4 @@
+import 'package:culture_explorer_ar/widgets/details_screen.dart';
 import 'package:flutter/material.dart';
 import 'custom_marker.dart';
 
@@ -14,13 +15,19 @@ class CustomCard extends StatelessWidget {
       margin: const EdgeInsets.all(12.0),
       clipBehavior: Clip.hardEdge,
       child: InkWell(
-        onTap: () => {},
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  barrierDismissible: true,
+                  builder: (context) => DetailsScreen(marker: marker)));
+        },
         child: Icon(
-            marker.type == 'museum'
-                ? Icons.museum_outlined
-                : Icons.palette_outlined,
-            size: 40,
-            ),
+          marker.type == 'museum'
+              ? Icons.museum_outlined
+              : Icons.palette_outlined,
+          size: 40,
+        ),
       ),
     );
   }

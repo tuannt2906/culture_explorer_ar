@@ -9,8 +9,8 @@ class SheetNotifier with ChangeNotifier {
   String _title = "Nearby Places";
   String get title => _title;
 
-  void update(String? title) {
-    _title = title ?? 'Not provided';
+  void update(String title) {
+    _title = title;
     notifyListeners();
   }
 }
@@ -91,13 +91,9 @@ class SheetBody extends StatelessWidget {
                 gridDelegate: CustomGridDelegate(dimension: 240),
                 itemCount: marker.markerList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  // final math.Random random = math.Random(index);
                   return GridTile(
                     header: GridTileBar(
-                      title: Text(
-                          marker.markerList[index].name ??
-                              marker.markerList[index].nameEn ??
-                              "Not provided",
+                      title: Text(marker.markerList[index].name,
                           style: const TextStyle(color: Colors.black)),
                     ),
                     child: CustomCard(marker: marker.markerList[index]),
