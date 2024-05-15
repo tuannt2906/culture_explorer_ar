@@ -26,9 +26,10 @@ class MarkerNotifier with ChangeNotifier {
   void createMarkers(List<Place> places) {
     _markerList = places
         .map((place) => CustomMarker(
-            point: place.position,
-            name: place.tags.name ?? place.tags.nameEn ?? "Not Provided",
-            type: place.tags.tourism))
+              point: place.position,
+              name: place.tags.name ?? place.tags.nameEn ?? "Not Provided",
+              type: place.tags.tourism,
+            ))
         .toList();
     notifyListeners();
   }
@@ -49,11 +50,6 @@ class CustomMarker extends Marker {
   final String name;
   final String type;
 
-  CustomMarker(
-      {required super.point,
-      required this.name,
-      required this.type})
-      : super(
-            rotate: true,
-            child: CustomIconButton(name: name, type: type));
+  CustomMarker({required super.point, required this.name, required this.type})
+      : super(rotate: true, child: CustomIconButton(name: name, type: type));
 }

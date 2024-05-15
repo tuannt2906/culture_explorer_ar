@@ -43,6 +43,7 @@ dependencies:
   flutter_map_cache: ^1.5.0
   dio_cache_interceptor: ^3.5.0
   provider: ^6.1.2
+  url_launcher: ^6.2.6
 
 dev_dependencies:
   flutter_test:
