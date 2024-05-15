@@ -3,6 +3,7 @@ import 'package:culture_explorer_ar/widgets/custom_marker.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'custom_card.dart';
 
 class SheetNotifier with ChangeNotifier {
   String _title = "Nearby Places";
@@ -99,20 +100,7 @@ class SheetBody extends StatelessWidget {
                               "Not provided",
                           style: const TextStyle(color: Colors.black)),
                     ),
-                    child: Container(
-                      margin: const EdgeInsets.all(12.0),
-                      decoration: ShapeDecoration(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        gradient: const RadialGradient(
-                          colors: <Color>[Color(0x0F88EEFF), Color(0x2F0099BB)],
-                        ),
-                      ),
-                      child: FlutterLogo(
-                        style: FlutterLogoStyle.values[1],
-                      ),
-                    ),
+                    child: CustomCard(marker: marker.markerList[index]),
                   );
                 })
           ],
